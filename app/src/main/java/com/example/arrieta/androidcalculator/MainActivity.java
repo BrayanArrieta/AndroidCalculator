@@ -4,8 +4,10 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.TextView;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
+    TextView textView;
     Button button0;
     Button button1;
     Button button2;
@@ -26,6 +28,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     Button buttonAdd ;
     Button buttonEqual;
     Button buttonParenthesis;
+
+    Integer number1;
+    Integer number2;
+    Boolean isAdd=false, isSubtract=false, isDivide=false,isMultiply=false;
+    Boolean passError=false;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -72,15 +79,117 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         this.buttonEqual.setOnClickListener(this);
         this.buttonParenthesis.setOnClickListener(this);
 
-
-
-
-
-
+        this.textView=(TextView)findViewById(R.id.textView);
     }
 
     @Override
     public void onClick(View view) {
+        if (passError){
+            clear();
+            clearTextView();
+        }
+        String content=this.textView.getText().toString();
+        switch (view.getId()){
+            case R.id.button0:
+                break;
+            case R.id.button1:
+            case R.id.button2:
+            case R.id.button3:
+            case R.id.button4:
+            case R.id.button5:
+            case R.id.button6:
+            case R.id.button7:
+            case R.id.button8:
+            case R.id.button9:
+                String digit=content+((Button)findViewById(view.getId())).getText();
+                this.textView.setText(digit);
+                break;
+            case R.id.buttonC:
+                clear();
+                break;
+            case R.id.buttonAdd:
+                add();
+                break;
+            case R.id.buttonDivide:
+                divide();
+                break;
+            case R.id.buttonDelete:
+                if(this.textView.getText().length()>0){
+                    this.textView.setText(content.substring(0, content.length() - 1));
+                }
+                break;
+            case R.id.buttonDot:
+                break;
+            case R.id.buttonSubtract:
+                subtract();
+                break;
+            case R.id.buttonParenthesis:
+                break;
+            case R.id.buttonPlusMinor:
+                break;
+            case R.id.buttonEqual:
+                calculate();
+                break;
+            case R.id.buttonMultiply:
+                multiply();
+                break;
+        }
+    }
+    private void add(){
+        this.number1=Integer.parseInt(this.textView.getText().toString());
+        this.textView.setText("");
+        this.isAdd=true;
+    }
+    private void subtract(){
+        this.number1=Integer.parseInt(this.textView.getText().toString());
+        this.textView.setText("");
+        this.isSubtract=true;
+    }
+    private void multiply(){
+        this.number1=Integer.parseInt(this.textView.getText().toString());
+        this.textView.setText("");
+        this.isMultiply=true;
+    }
+    private void divide(){
+        this.number1=Integer.parseInt(this.textView.getText().toString());
+        this.textView.setText("");
+        this.isDivide=true;
+    }
+    private void clear(){
+        this.number1=null;
+        this.number2=null;
+        this.isDivide=false;
+        this.isMultiply=false;
+        this.isAdd=false;
+        this.isSubtract=false;
+
+        this.passError=false;
+    }
+    private void clearTextView(){
+        this.textView.setText("");
+    }
+    private void calculate(){
+        if (this.textView.getText().length()==0)
+            return;
+        try{
+            if (isSubtract){
+                this.number2=Integer.parseInt(this.textView.getText().toString());
+                this.textView.setText(String.valueOf(number1-number2));
+            }else if(isDivide){
+                this.number2=Integer.parseInt(this.textView.getText().toString());
+                this.textView.setText(String.valueOf(number1/number2));
+            }else if (isAdd){
+                this.number2=Integer.parseInt(this.textView.getText().toString());
+                this.textView.setText(String.valueOf(number1+number2));
+            }else if (isMultiply){
+                this.number2=Integer.parseInt(this.textView.getText().toString());
+                this.textView.setText(String.valueOf(number1*number2));
+            }
+            clear();
+        }catch (Exception e){
+            this.passError=true;
+            this.textView.setText("Error");
+        }
 
     }
 }
